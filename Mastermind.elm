@@ -3,6 +3,7 @@ module MasterMind exposing (..)
 import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
+import List exposing (map, member, take, drop)
 
 
 -- Main
@@ -26,9 +27,26 @@ type alias Model =
     Int
 
 
+type Color
+    = Red
+    | Yellow
+    | Blue
+    | Green
+    | Orange
+    | Purple
+    | Black
+    | White
+    | Nothing
+
+
 init : ( Model, Cmd Msg )
 init =
     ( 1, Cmd.none )
+
+
+colorChoices : List Color
+colorChoices =
+    [ Red, Yellow, Blue, Green, Orange, Purple, Black, White ]
 
 
 
@@ -50,11 +68,21 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container" ]
-        [ ul [ class "solution" ]
-            [ li [] [ text "•" ]
-            , li [] [ text "•" ]
-            , li [] [ text "•" ]
-            , li [] [ text "•" ]
+    let
+        renderChoice : List Color -> List (Html Msg)
+        renderChoice colors =
+            map
+                (\color ->
+                    li [ class (toString color) ] [ text "•" ]
+                )
+                colors
+    in
+        div [ class "container" ]
+            [ ul [ class "solution" ]
+                [ li [] [ text "•" ]
+                , li [] [ text "•" ]
+                , li [] [ text "•" ]
+                , li [] [ text "•" ]
+                ]
+            , ul [ class "choice" ] (renderChoice colorChoices)
             ]
-        ]

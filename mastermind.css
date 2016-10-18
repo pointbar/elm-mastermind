@@ -1,5 +1,5 @@
 body {
-    background: #f2f2f2;
+  background: #f2f2f2;
 }
 
 div.container {
@@ -24,8 +24,55 @@ li {
     margin: 0em .1em;
 }
 
-ul.solution {
+ul.choice {
+    cursor: pointer;
+}
+
+ul.proposition,
+ul.solution,
+ul.choice {
     font-size: 5em;
     line-height: 0.8em;
     margin-left: .5em;
+}
+
+ul.evaluation {
+    float: right;
+    line-height: 0.8em;
+    font-size: 2em;
+    margin: .2em;
+    padding: .2em;
+    border: solid 1px #9c512c;
+}
+
+.Yellow {
+    color: yellow;
+}
+
+.Red {
+    color: red;
+}
+
+.Green {
+    color: green;
+}
+
+.Blue {
+    color: blue;
+}
+
+.Purple {
+    color: purple;
+}
+
+.White {
+    color: white;
+}
+
+.Orange {
+    color: orange;
+}
+
+.Black {
+    color: black;
 }
