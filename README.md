@@ -8,11 +8,11 @@ The program draw a solution, you propose some tries, each time the program evalu
 ## User Stories
 
 ### US1 - View the board
-- [] draw board
-- [] draw colors
-- [] draw evaluations
-- [] draw tries
-- [] draw solution
+- [ ] draw board
+- [ ] draw colors
+- [ ] draw evaluations
+- [ ] draw tries
+- [ ] draw solution
 
 ### US2 - Draw a solution
 ### US3 - Propose a combination
