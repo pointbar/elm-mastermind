@@ -1,6 +1,7 @@
 module MasterMind exposing (..)
 
 import Html exposing (Html, text, div, ul, li)
+import Html.Attributes exposing (class)
 import Html.App exposing (program)
 
 
@@ -34,7 +35,8 @@ init =
 -- Update
 
 
-type Msg = None
+type Msg
+    = None
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -48,4 +50,11 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [] [text (toString model)]
+    div [ class "container" ]
+        [ ul [ class "solution" ]
+            [ li [] [ text "•" ]
+            , li [] [ text "•" ]
+            , li [] [ text "•" ]
+            , li [] [ text "•" ]
+            ]
+        ]
