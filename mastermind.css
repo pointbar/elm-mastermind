@@ -28,7 +28,7 @@ ul.choice {
     cursor: pointer;
 }
 
-ul.proposition,
+ul.propositions,
 ul.solution,
 ul.choice {
     font-size: 5em;

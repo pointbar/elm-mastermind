@@ -3,7 +3,7 @@ module MasterMind exposing (..)
 import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
-import List exposing (map, member, take, drop)
+import List exposing (map, member, take, drop, repeat)
 
 
 -- Main
@@ -24,7 +24,7 @@ main =
 
 
 type alias Model =
-    Int
+    { tries : List (List Color) }
 
 
 type Color
@@ -41,7 +41,7 @@ type Color
 
 init : ( Model, Cmd Msg )
 init =
-    ( 1, Cmd.none )
+    ( { tries = repeat 10 (repeat 4 Nothing) }, Cmd.none )
 
 
 colorChoices : List Color
@@ -69,8 +69,15 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        renderChoice : List Color -> List (Html Msg)
-        renderChoice colors =
+        renderProposition : List (List Color) -> List (Html Msg)
+        renderProposition tries =
+            map
+                (\try ->
+                    ul [ class "round" ] (renderSequence try)
+                )
+                tries
+        renderSequence :  List Color -> List (Html Msg)
+        renderSequence colors =
             map
                 (\color ->
                     li [ class (toString color) ] [ text "•" ]
@@ -84,5 +91,6 @@ view model =
                 , li [] [ text "•" ]
                 , li [] [ text "•" ]
                 ]
-            , ul [ class "choice" ] (renderChoice colorChoices)
+            , ul [ class "propositions" ] (renderProposition model.tries)
+            , ul [ class "choice" ] (renderSequence colorChoices)
             ]
