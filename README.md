@@ -7,7 +7,7 @@ The program draw a solution, you propose some tries, each time the program evalu
 
 ## User Stories
 
-### US1 - View the board
+### [US1 - View the board](https://github.com/pointbar/elm-mastermind/pull/1)
 - [x] draw board
 - [x] draw colors
 - [x] draw evaluations
@@ -15,6 +15,9 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] draw solution
 
 ### US2 - Draw a solution
+- [ ] randomize sequence
+- [ ] display solution
+
 ### US3 - Propose a combination
 ### US4 - Evaluate a combination
 ### US5 - Propose an other combination
