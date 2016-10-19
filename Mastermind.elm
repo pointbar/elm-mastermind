@@ -24,7 +24,15 @@ main =
 
 
 type alias Model =
-    { tries : List (List Color) }
+    { tries : List ( Choice, Evaluation ) }
+
+
+type alias Choice =
+    List Color
+
+
+type alias Evaluation =
+    List Color
 
 
 type Color
@@ -41,7 +49,7 @@ type Color
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tries = repeat 10 (repeat 4 Nothing) }, Cmd.none )
+    ( { tries = repeat 10 ( repeat 4 Nothing, repeat 4 Nothing ) }, Cmd.none )
 
 
 colorChoices : List Color
@@ -69,11 +77,14 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        renderProposition : List (List Color) -> List (Html Msg)
+        renderProposition : List ( Choice, Evaluation ) -> List (Html Msg)
         renderProposition tries =
             map
                 (\try ->
-                    ul [ class "round" ] (renderSequence try)
+                    ul [ class "round" ]
+                        [ ul [ class "evaluation" ] (renderSequence (snd try))
+                        , ul [ class "choice" ] (renderSequence (fst try))
+                        ]
                 )
                 tries
         renderSequence :  List Color -> List (Html Msg)

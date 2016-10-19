@@ -10,9 +10,9 @@ The program draw a solution, you propose some tries, each time the program evalu
 ### US1 - View the board
 - [x] draw board
 - [x] draw colors
-- [ ] draw evaluations
-- [ ] draw tries
-- [ ] draw solution
+- [x] draw evaluations
+- [x] draw tries
+- [x] draw solution
 
 ### US2 - Draw a solution
 ### US3 - Propose a combination
