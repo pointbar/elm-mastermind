@@ -19,6 +19,10 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] display solution
 
 ### US3 - Propose a combination
+- [ ] manage onclick
+- [ ] display color by position
+- [ ] store proposition
+
 ### US4 - Evaluate a combination
 ### US5 - Propose an other combination
 ### US6 - View the solution when game is over
