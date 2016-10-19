@@ -8,8 +8,8 @@ The program draw a solution, you propose some tries, each time the program evalu
 ## User Stories
 
 ### US1 - View the board
-- [ ] draw board
-- [ ] draw colors
+- [x] draw board
+- [x] draw colors
 - [ ] draw evaluations
 - [ ] draw tries
 - [ ] draw solution
