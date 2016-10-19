@@ -3,7 +3,8 @@ module MasterMind exposing (..)
 import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
-import List exposing (map, member, take, drop, repeat)
+import List exposing (map, member, take, drop, repeat, head)
+import Random
 
 
 -- Main
@@ -24,7 +25,9 @@ main =
 
 
 type alias Model =
-    { tries : List ( Choice, Evaluation ) }
+    { tries : List ( Choice, Evaluation )
+    , solution : Choice
+    }
 
 
 type alias Choice =
@@ -49,7 +52,13 @@ type Color
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tries = repeat 10 ( repeat 4 Nothing, repeat 4 Nothing ) }, Cmd.none )
+    ( { tries = repeat 10 ( repeat 4 Nothing, repeat 4 Nothing )
+      , solution = []
+      }
+    , Random.generate InitSolution <|
+        Random.list 4 <|
+            Random.int 0 7
+    )
 
 
 colorChoices : List Color
@@ -62,12 +71,26 @@ colorChoices =
 
 
 type Msg
-    = None
+    = InitSolution (List Int)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        InitSolution random ->
+            ( { model
+                | solution =
+                    map
+                        (\number ->
+                            colorChoices
+                                |> drop number
+                                |> head
+                                |> Maybe.withDefault Nothing
+                        )
+                        random
+              }
+            , Cmd.none
+            )
 
 
 
@@ -87,7 +110,8 @@ view model =
                         ]
                 )
                 tries
-        renderSequence :  List Color -> List (Html Msg)
+
+        renderSequence : List Color -> List (Html Msg)
         renderSequence colors =
             map
                 (\color ->
