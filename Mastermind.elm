@@ -120,12 +120,7 @@ view model =
                 colors
     in
         div [ class "container" ]
-            [ ul [ class "solution" ]
-                [ li [] [ text "•" ]
-                , li [] [ text "•" ]
-                , li [] [ text "•" ]
-                , li [] [ text "•" ]
-                ]
+            [ ul [ class "solution" ] (renderSequence model.solution)
             , ul [ class "propositions" ] (renderProposition model.tries)
             , ul [ class "choice" ] (renderSequence colorChoices)
             ]

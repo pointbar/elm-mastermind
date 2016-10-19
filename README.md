@@ -15,8 +15,8 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] draw solution
 
 ### US2 - Draw a solution
-- [ ] randomize sequence
-- [ ] display solution
+- [x] randomize sequence
+- [x] display solution
 
 ### US3 - Propose a combination
 ### US4 - Evaluate a combination
