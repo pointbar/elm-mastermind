@@ -4,7 +4,7 @@ import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
 import Html.Events exposing (onClick)
-import List exposing (map, member, take, drop, repeat, head)
+import List exposing (map, member, take, drop, repeat, head, reverse)
 import Random
 
 
@@ -26,8 +26,12 @@ main =
 
 
 type alias Model =
-    { tries : List ( Choice, Evaluation )
+    { previousTries : List ( Choice, Evaluation )
+    , currentTry : ( Choice, Evaluation )
+    , nextTries : List ( Choice, Evaluation )
     , solution : Choice
+    , position : Int
+    , round : Int
     }
 
 
@@ -53,8 +57,12 @@ type Color
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tries = repeat 10 ( repeat 4 Nothing, repeat 4 Nothing )
+    ( { previousTries = []
+      , currentTry = ( repeat 4 Nothing, repeat 4 Nothing )
+      , nextTries = repeat 9 ( repeat 4 Nothing, repeat 4 Nothing )
       , solution = []
+      , round = 0
+      , position = 1
       }
     , Random.generate InitSolution <|
         Random.list 4 <|
@@ -65,6 +73,14 @@ init =
 colorChoices : List Color
 colorChoices =
     [ Red, Yellow, Blue, Green, Orange, Purple, Black, White ]
+
+
+tries : Model -> List ( Choice, Evaluation )
+tries model =
+    model.previousTries
+        ++ [ model.currentTry ]
+        ++ model.nextTries
+        |> reverse
 
 
 
@@ -95,7 +111,17 @@ update msg model =
             )
 
         SelectColor color ->
-            Debug.log "Tuple ( model, Cmd.none )" ( model, Cmd.none )
+            case (model.position) of
+                1 ->
+                    ( { model
+                        | currentTry = ( [ color, Nothing, Nothing, Nothing ], repeat 4 Nothing )
+                        , position = 2
+                      }
+                    , Cmd.none
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 
@@ -134,6 +160,6 @@ view model =
     in
         div [ class "container" ]
             [ ul [ class "solution" ] (renderSequence model.solution)
-            , ul [ class "propositions" ] (renderProposition model.tries)
+            , ul [ class "propositions" ] (renderProposition (tries model))
             , ul [ class "color-choices" ] (renderColorChoices colorChoices)
             ]
