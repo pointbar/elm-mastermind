@@ -3,6 +3,7 @@ module MasterMind exposing (..)
 import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
+import Html.Events exposing (onClick)
 import List exposing (map, member, take, drop, repeat, head)
 import Random
 
@@ -72,6 +73,7 @@ colorChoices =
 
 type Msg
     = InitSolution (List Int)
+    | SelectColor Color
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -91,6 +93,9 @@ update msg model =
               }
             , Cmd.none
             )
+
+        SelectColor color ->
+            Debug.log "Tuple ( model, Cmd.none )" ( model, Cmd.none )
 
 
 
@@ -118,9 +123,17 @@ view model =
                     li [ class (toString color) ] [ text "•" ]
                 )
                 colors
+
+        renderColorChoices : List Color -> List (Html Msg)
+        renderColorChoices colors =
+            map
+                (\color ->
+                    li [ class (toString color), onClick (SelectColor color) ] [ text "•" ]
+                )
+                colors
     in
         div [ class "container" ]
             [ ul [ class "solution" ] (renderSequence model.solution)
             , ul [ class "propositions" ] (renderProposition model.tries)
-            , ul [ class "choice" ] (renderSequence colorChoices)
+            , ul [ class "color-choices" ] (renderColorChoices colorChoices)
             ]

@@ -19,7 +19,7 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] display solution
 
 ### US3 - Propose a combination
-- [ ] manage onclick
+- [x] manage onclick
 - [ ] display color by position
 - [ ] store proposition
 
