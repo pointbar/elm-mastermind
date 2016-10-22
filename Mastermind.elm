@@ -27,8 +27,7 @@ main =
 
 type alias Model =
     { previousTries : List ( Choice, Evaluation )
-    , currentTry : ( Choice, Evaluation )
-    , nextTries : List ( Choice, Evaluation )
+    , currentTry : List Color
     , solution : Choice
     , position : Int
     , round : Int
@@ -58,8 +57,7 @@ type Color
 init : ( Model, Cmd Msg )
 init =
     ( { previousTries = []
-      , currentTry = ( repeat 4 Nothing, repeat 4 Nothing )
-      , nextTries = repeat 9 ( repeat 4 Nothing, repeat 4 Nothing )
+      , currentTry = []
       , solution = []
       , round = 0
       , position = 1
@@ -78,8 +76,8 @@ colorChoices =
 tries : Model -> List ( Choice, Evaluation )
 tries model =
     model.previousTries
-        ++ [ model.currentTry ]
-        ++ model.nextTries
+        ++ [ ( model.currentTry, repeat 4 Nothing ) ]
+        ++ repeat (10 - model.round) ( repeat 4 Nothing, repeat 4 Nothing )
         |> reverse
 
 
@@ -114,14 +112,29 @@ update msg model =
             case (model.position) of
                 1 ->
                     ( { model
-                        | currentTry = ( [ color, Nothing, Nothing, Nothing ], repeat 4 Nothing )
+                        | currentTry = [ color ]
                         , position = 2
                       }
                     , Cmd.none
                     )
 
+                4 ->
+                    ( { model
+                        | currentTry = repeat 4 Nothing
+                        , previousTries = model.previousTries ++ [ ( model.currentTry ++ [ color ], repeat 4 Nothing ) ]
+                        , round = model.round + 1
+                        , position = 1
+                      }
+                    , Cmd.none
+                    )
+
                 _ ->
-                    ( model, Cmd.none )
+                    ( { model
+                        | currentTry = model.currentTry ++ [ color ]
+                        , position = model.position + 1
+                      }
+                    , Cmd.none
+                    )
 
 
 

@@ -21,7 +21,7 @@ The program draw a solution, you propose some tries, each time the program evalu
 ### US3 - Propose a combination
 - [x] manage onclick
 - [x] display color for first position
-- [ ] display color by position
+- [x] display color by position
 - [ ] store proposition
 
 ### US4 - Evaluate a combination
