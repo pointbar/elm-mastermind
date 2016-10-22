@@ -24,12 +24,13 @@ li {
     margin: 0em .1em;
 }
 
-ul.choice {
+ul.color-choices {
     cursor: pointer;
 }
 
 ul.solution,
-ul.choice {
+ul.choice,
+ul.color-choices {
     font-size: 5em;
     line-height: 0.8em;
     margin-left: .5em;

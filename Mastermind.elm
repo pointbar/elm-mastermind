@@ -3,7 +3,8 @@ module MasterMind exposing (..)
 import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
-import List exposing (map, member, take, drop, repeat, head)
+import Html.Events exposing (onClick)
+import List exposing (map, member, take, drop, repeat, head, reverse)
 import Random
 
 
@@ -25,8 +26,11 @@ main =
 
 
 type alias Model =
-    { tries : List ( Choice, Evaluation )
+    { previousTries : List ( Choice, Evaluation )
+    , currentTry : List Color
     , solution : Choice
+    , position : Int
+    , round : Int
     }
 
 
@@ -52,8 +56,11 @@ type Color
 
 init : ( Model, Cmd Msg )
 init =
-    ( { tries = repeat 10 ( repeat 4 Nothing, repeat 4 Nothing )
+    ( { previousTries = []
+      , currentTry = []
       , solution = []
+      , round = 0
+      , position = 1
       }
     , Random.generate InitSolution <|
         Random.list 4 <|
@@ -66,12 +73,20 @@ colorChoices =
     [ Red, Yellow, Blue, Green, Orange, Purple, Black, White ]
 
 
+tries : Model -> List ( Choice, Evaluation )
+tries model =
+    model.previousTries
+        ++ [ ( model.currentTry ++ (repeat (5 - model.position) Nothing), repeat 4 Nothing ) ]
+        ++ repeat (10 - model.round) ( repeat 4 Nothing, repeat 4 Nothing )
+        |> reverse
+
 
 -- Update
 
 
 type Msg
     = InitSolution (List Int)
+    | SelectColor Color
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -91,6 +106,36 @@ update msg model =
               }
             , Cmd.none
             )
+
+        SelectColor color ->
+            case (model.position) of
+                1 ->
+                    ( { model
+                        | currentTry = [ color ]
+                        , position = 2
+                      }
+                    , Cmd.none
+                    )
+
+                4 ->
+                    ( { model
+                        | currentTry = []
+                        , previousTries =
+                            model.previousTries
+                            ++ [ ( model.currentTry ++ [ color ], repeat 4 Nothing ) ]
+                        , round = model.round + 1
+                        , position = 1
+                      }
+                    , Cmd.none
+                    )
+
+                _ ->
+                    ( { model
+                        | currentTry = model.currentTry ++ [ color ]
+                        , position = model.position + 1
+                      }
+                    , Cmd.none
+                    )
 
 
 
@@ -118,9 +163,17 @@ view model =
                     li [ class (toString color) ] [ text "•" ]
                 )
                 colors
+
+        renderColorChoices : List Color -> List (Html Msg)
+        renderColorChoices colors =
+            map
+                (\color ->
+                    li [ class (toString color), onClick (SelectColor color) ] [ text "•" ]
+                )
+                colors
     in
         div [ class "container" ]
             [ ul [ class "solution" ] (renderSequence model.solution)
-            , ul [ class "propositions" ] (renderProposition model.tries)
-            , ul [ class "choice" ] (renderSequence colorChoices)
+            , ul [ class "propositions" ] (renderProposition (tries model))
+            , ul [ class "color-choices" ] (renderColorChoices colorChoices)
             ]
