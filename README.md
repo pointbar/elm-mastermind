@@ -25,6 +25,11 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] store proposition
 
 ### US4 - Evaluate a combination
+- [ ] evaluate right place colors
+- [ ] evaluate wrong place colors
+- [ ] display evaluation
+- [ ] store evaluation
+
 ### US5 - Propose an other combination
 ### US6 - View the solution when game is over
 
