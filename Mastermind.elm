@@ -76,10 +76,9 @@ colorChoices =
 tries : Model -> List ( Choice, Evaluation )
 tries model =
     model.previousTries
-        ++ [ ( model.currentTry, repeat 4 Nothing ) ]
+        ++ [ ( model.currentTry ++ (repeat (5 - model.position) Nothing), repeat 4 Nothing ) ]
         ++ repeat (10 - model.round) ( repeat 4 Nothing, repeat 4 Nothing )
         |> reverse
-
 
 
 -- Update
@@ -120,8 +119,10 @@ update msg model =
 
                 4 ->
                     ( { model
-                        | currentTry = repeat 4 Nothing
-                        , previousTries = model.previousTries ++ [ ( model.currentTry ++ [ color ], repeat 4 Nothing ) ]
+                        | currentTry = []
+                        , previousTries =
+                            model.previousTries
+                            ++ [ ( model.currentTry ++ [ color ], repeat 4 Nothing ) ]
                         , round = model.round + 1
                         , position = 1
                       }

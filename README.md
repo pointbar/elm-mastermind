@@ -22,7 +22,7 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] manage onclick
 - [x] display color for first position
 - [x] display color by position
-- [ ] store proposition
+- [x] store proposition
 
 ### US4 - Evaluate a combination
 ### US5 - Propose an other combination
