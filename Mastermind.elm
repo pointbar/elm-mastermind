@@ -138,7 +138,8 @@ update msg model =
                                     wrongPlace : Int
                                     wrongPlace =
                                         (filter (\color -> member color model.solution) currentTry
-                                            |> length)
+                                            |> length
+                                        )
                                             - rightPlace
                                 in
                                     repeat rightPlace Black
