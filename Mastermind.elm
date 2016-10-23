@@ -128,10 +128,22 @@ update msg model =
                                 let
                                     rightPlace : Int
                                     rightPlace =
-                                        filter (\index -> (drop index model.solution |> head) == (drop index currentTry |> head)) [0..3]
+                                        filter
+                                            (\index ->
+                                                (drop index model.solution |> head) == (drop index currentTry |> head)
+                                            )
+                                            [0..3]
                                             |> length
+
+                                    wrongPlace : Int
+                                    wrongPlace =
+                                        (filter (\color -> member color model.solution) currentTry
+                                            |> length)
+                                            - rightPlace
                                 in
                                     repeat rightPlace Black
+                                        ++ repeat wrongPlace White
+                                        ++ repeat (4 - rightPlace - wrongPlace) Nothing
                         in
                             ( { model
                                 | currentTry = []

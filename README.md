@@ -18,20 +18,18 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] randomize sequence
 - [x] display solution
 
-### US3 - Propose a combination
+### US3 - Propose combinations
 - [x] manage onclick
 - [x] display color for first position
 - [x] display color by position
 - [x] store proposition
 
 ### US4 - Evaluate a combination
-- [ ] evaluate right place colors
-- [ ] evaluate wrong place colors
-- [ ] display evaluation
-- [ ] store evaluation
+- [x] evaluate right place colors
+- [x] evaluate wrong place colors
+- [x] store evaluation
 
-### US5 - Propose an other combination
-### US6 - View the solution when game is over
+### US5 - View the solution when game is over
 
 ## To compile
 ```bash
