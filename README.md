@@ -30,9 +30,8 @@ The program draw a solution, you propose some tries, each time the program evalu
 - [x] store evaluation
 
 ### US5 - View the solution when game is over
-- [ ] hide solution
-- [ ] show solution
-- [ ] replay
+- [x] hide solution
+- [x] show solution
 
 ## To compile
 ```bash
