@@ -26,15 +26,16 @@ main =
 
 
 type alias Model =
-    { previousTries : List ( Choice, Evaluation )
+    { previousTries : List ( Sequence, Evaluation )
     , currentTry : List Color
-    , solution : Choice
+    , solution : Sequence
     , position : Int
     , round : Int
+    , isGameOver : Bool
     }
 
 
-type alias Choice =
+type alias Sequence =
     List Color
 
 
@@ -61,6 +62,7 @@ init =
       , solution = []
       , round = 0
       , position = 1
+      , isGameOver = False
       }
     , Random.generate InitSolution <|
         Random.list 4 <|
@@ -73,7 +75,7 @@ colorChoices =
     [ Red, Yellow, Blue, Green, Orange, Purple, Black, White ]
 
 
-tries : Model -> List ( Choice, Evaluation )
+tries : Model -> List ( Sequence, Evaluation )
 tries model =
     model.previousTries
         ++ [ ( model.currentTry ++ (repeat (5 - model.position) Nothing), repeat 4 Nothing ) ]
@@ -153,6 +155,7 @@ update msg model =
                                         ++ [ ( currentTry, evaluation ) ]
                                 , round = model.round + 1
                                 , position = 1
+                                , isGameOver = evaluation == repeat 4 Black
                               }
                             , Cmd.none
                             )
@@ -173,7 +176,16 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        renderProposition : List ( Choice, Evaluation ) -> List (Html Msg)
+        renderSolution : Sequence -> Bool -> Html Msg
+        renderSolution solution isGameOver =
+            case isGameOver of
+                True ->
+                    ul [ class "solution" ] (renderSequence solution)
+
+                False ->
+                    ul [ class "solution" ] (renderSequence (repeat 4 Nothing))
+
+        renderProposition : List ( Sequence, Evaluation ) -> List (Html Msg)
         renderProposition tries =
             map
                 (\try ->
@@ -184,7 +196,7 @@ view model =
                 )
                 tries
 
-        renderSequence : List Color -> List (Html Msg)
+        renderSequence : Sequence -> List (Html Msg)
         renderSequence colors =
             map
                 (\color ->
@@ -192,7 +204,7 @@ view model =
                 )
                 colors
 
-        renderColorChoices : List Color -> List (Html Msg)
+        renderColorChoices : Sequence -> List (Html Msg)
         renderColorChoices colors =
             map
                 (\color ->
@@ -201,7 +213,7 @@ view model =
                 colors
     in
         div [ class "container" ]
-            [ ul [ class "solution" ] (renderSequence model.solution)
+            [ (renderSolution model.solution model.isGameOver)
             , ul [ class "propositions" ] (renderProposition (tries model))
             , ul [ class "color-choices" ] (renderColorChoices colorChoices)
             ]
