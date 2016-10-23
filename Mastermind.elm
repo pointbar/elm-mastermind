@@ -4,7 +4,7 @@ import Html exposing (Html, text, div, ul, li)
 import Html.Attributes exposing (class)
 import Html.App exposing (program)
 import Html.Events exposing (onClick)
-import List exposing (map, member, take, drop, repeat, head, reverse)
+import List exposing (..)
 import Random
 
 
@@ -81,6 +81,7 @@ tries model =
         |> reverse
 
 
+
 -- Update
 
 
@@ -108,34 +109,48 @@ update msg model =
             )
 
         SelectColor color ->
-            case (model.position) of
-                1 ->
-                    ( { model
-                        | currentTry = [ color ]
-                        , position = 2
-                      }
-                    , Cmd.none
-                    )
+            let
+                currentTry =
+                    model.currentTry ++ [ color ]
+            in
+                case (model.position) of
+                    1 ->
+                        ( { model
+                            | currentTry = currentTry
+                            , position = 2
+                          }
+                        , Cmd.none
+                        )
 
-                4 ->
-                    ( { model
-                        | currentTry = []
-                        , previousTries =
-                            model.previousTries
-                            ++ [ ( model.currentTry ++ [ color ], repeat 4 Nothing ) ]
-                        , round = model.round + 1
-                        , position = 1
-                      }
-                    , Cmd.none
-                    )
+                    4 ->
+                        let
+                            evaluation =
+                                let
+                                    rightPlace : Int
+                                    rightPlace =
+                                        filter (\index -> (drop index model.solution |> head) == (drop index currentTry |> head)) [0..3]
+                                            |> length
+                                in
+                                    repeat rightPlace Black
+                        in
+                            ( { model
+                                | currentTry = []
+                                , previousTries =
+                                    model.previousTries
+                                        ++ [ ( currentTry, evaluation ) ]
+                                , round = model.round + 1
+                                , position = 1
+                              }
+                            , Cmd.none
+                            )
 
-                _ ->
-                    ( { model
-                        | currentTry = model.currentTry ++ [ color ]
-                        , position = model.position + 1
-                      }
-                    , Cmd.none
-                    )
+                    _ ->
+                        ( { model
+                            | currentTry = currentTry
+                            , position = model.position + 1
+                          }
+                        , Cmd.none
+                        )
 
 
 
