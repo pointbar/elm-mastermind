@@ -5,6 +5,9 @@ A simple [MasterMind](https://en.wikipedia.org/wiki/Mastermind) game in Elm
 
 The program draw a solution, you propose some tries, each time the program evaluate your combination.
 
+## Demo
+[Demo](https://pointbar.github.io/elm-mastermind/)
+
 ## User Stories
 
 ### [US1 - View the board](https://github.com/pointbar/elm-mastermind/pull/1)
