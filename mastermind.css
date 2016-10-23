@@ -1,0 +1,78 @@
+body {
+  background: #f2f2f2;
+}
+
+div.container {
+    width: 25em;
+    margin: auto;
+    background: #ad623d;
+    border-style: solid;
+    border-width: .2em;
+    border-color: #9c512c;
+    border-radius: 4px;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+li {
+    display: inline;
+    color: #9c512c;
+    margin: 0em .1em;
+}
+
+ul.color-choices {
+    cursor: pointer;
+}
+
+ul.solution,
+ul.choice,
+ul.color-choices {
+    font-size: 5em;
+    line-height: 0.8em;
+    margin-left: .5em;
+}
+
+ul.evaluation {
+    float: right;
+    line-height: 0.8em;
+    font-size: 2em;
+    margin: .2em;
+    padding: .2em;
+    border: solid 1px #9c512c;
+}
+
+.Yellow {
+    color: yellow;
+}
+
+.Red {
+    color: red;
+}
+
+.Green {
+    color: green;
+}
+
+.Blue {
+    color: blue;
+}
+
+.Purple {
+    color: purple;
+}
+
+.White {
+    color: white;
+}
+
+.Orange {
+    color: orange;
+}
+
+.Black {
+    color: black;
+}
