@@ -116,14 +116,6 @@ update msg model =
                     model.currentTry ++ [ color ]
             in
                 case (model.position) of
-                    1 ->
-                        ( { model
-                            | currentTry = currentTry
-                            , position = 2
-                          }
-                        , Cmd.none
-                        )
-
                     4 ->
                         let
                             evaluation =
