@@ -26,8 +26,8 @@ main =
 
 
 type alias Model =
-    { previousTries : List ( Sequence, Evaluation )
-    , currentTry : List Color
+    { previousTries : List Try
+    , currentTry : Sequence
     , solution : Sequence
     , position : Int
     , round : Int
@@ -35,12 +35,16 @@ type alias Model =
     }
 
 
+type alias Try =
+    ( Sequence, Evaluation )
+
+
 type alias Sequence =
-    List Color
+    List (Maybe Color)
 
 
 type alias Evaluation =
-    List Color
+    List (Maybe Color)
 
 
 type Color
@@ -52,7 +56,6 @@ type Color
     | Purple
     | Black
     | White
-    | Nothing
 
 
 init : ( Model, Cmd Msg )
@@ -72,15 +75,15 @@ init =
 
 colorChoices : List Color
 colorChoices =
-    [ Red, Yellow, Blue, Green, Orange, Purple, Black, White ]
-
-
-tries : Model -> List ( Sequence, Evaluation )
-tries model =
-    model.previousTries
-        ++ [ ( model.currentTry ++ (repeat (5 - model.position) Nothing), repeat 4 Nothing ) ]
-        ++ repeat (10 - model.round) ( repeat 4 Nothing, repeat 4 Nothing )
-        |> reverse
+    [ Red
+    , Yellow
+    , Blue
+    , Green
+    , Orange
+    , Purple
+    , Black
+    , White
+    ]
 
 
 
@@ -96,58 +99,28 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         InitSolution random ->
-            ( { model
-                | solution =
-                    map
-                        (\number ->
-                            colorChoices
-                                |> drop number
-                                |> head
-                                |> Maybe.withDefault Nothing
-                        )
-                        random
-              }
-            , Cmd.none
-            )
+            ( { model | solution = numbersToColors random }, Cmd.none )
 
         SelectColor color ->
             let
                 currentTry =
-                    model.currentTry ++ [ color ]
+                    model.currentTry ++ [ Just color ]
             in
                 case (model.position) of
                     4 ->
                         let
-                            evaluation =
-                                let
-                                    rightPlace : Int
-                                    rightPlace =
-                                        filter
-                                            (\index ->
-                                                (drop index model.solution |> head) == (drop index currentTry |> head)
-                                            )
-                                            [0..3]
-                                            |> length
+                            previousTries =
+                                storeCurrentWithEval model currentTry
 
-                                    wrongPlace : Int
-                                    wrongPlace =
-                                        (filter (\color -> member color model.solution) currentTry
-                                            |> length
-                                        )
-                                            - rightPlace
-                                in
-                                    repeat rightPlace Black
-                                        ++ repeat wrongPlace White
-                                        ++ repeat (4 - rightPlace - wrongPlace) Nothing
+                            isGameOver =
+                                snd (Maybe.withDefault ( [], [] ) (head previousTries)) == repeat 4 (Just Black)
                         in
                             ( { model
                                 | currentTry = []
-                                , previousTries =
-                                    model.previousTries
-                                        ++ [ ( currentTry, evaluation ) ]
+                                , previousTries = previousTries
                                 , round = model.round + 1
                                 , position = 1
-                                , isGameOver = evaluation == repeat 4 Black
+                                , isGameOver = isGameOver
                               }
                             , Cmd.none
                             )
@@ -161,8 +134,56 @@ update msg model =
                         )
 
 
+numbersToColors : List Int -> Sequence
+numbersToColors random =
+    map
+        (\number ->
+            colorChoices
+                |> drop number
+                |> head
+        )
+        random
+
+
+evalPosition : Sequence -> Sequence -> Evaluation
+evalPosition currentTry solution =
+    let
+        rightPlace : Int
+        rightPlace =
+            filter
+                (\index ->
+                    (drop index solution |> head) == (drop index currentTry |> head)
+                )
+                [0..3]
+                |> length
+
+        wrongPlace : Int
+        wrongPlace =
+            (filter (\color -> member color solution) currentTry
+                |> length
+            )
+                - rightPlace
+    in
+        repeat rightPlace (Just Black)
+            ++ repeat wrongPlace (Just White)
+            ++ repeat (4 - (rightPlace + wrongPlace)) Nothing
+
+
+storeCurrentWithEval : Model -> Sequence -> List Try
+storeCurrentWithEval model currentTry =
+    [ ( currentTry, evalPosition currentTry model.solution ) ]
+        ++ model.previousTries
+
+
 
 -- View
+
+
+tries : Model -> List Try
+tries model =
+    repeat (10 - model.round) ( repeat 4 Nothing, repeat 4 Nothing )
+        ++ [ ( (model.currentTry ++ (repeat (5 - model.position) Nothing)), repeat 4 Nothing ) ]
+        ++ model.previousTries
 
 
 view : Model -> Html Msg
@@ -177,7 +198,7 @@ view model =
                 False ->
                     ul [ class "solution" ] (renderSequence (repeat 4 Nothing))
 
-        renderProposition : List ( Sequence, Evaluation ) -> List (Html Msg)
+        renderProposition : List Try -> List (Html Msg)
         renderProposition tries =
             map
                 (\try ->
@@ -196,7 +217,7 @@ view model =
                 )
                 colors
 
-        renderColorChoices : Sequence -> List (Html Msg)
+        renderColorChoices : List Color -> List (Html Msg)
         renderColorChoices colors =
             map
                 (\color ->
